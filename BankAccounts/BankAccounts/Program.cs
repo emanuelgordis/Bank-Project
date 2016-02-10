@@ -17,12 +17,19 @@ namespace BankAccounts
             //making a new account or logging in
             Console.WriteLine("Welcome to Emanuel's bank! \nDo you have an account already? Yes/No");
             string newUserOrNah = Console.ReadLine();
+            newUserOrNah.ToLower()
+            // Jeff: you can use newUserOrNah.ToLower() == "yes" to simplify and do a single check regardless or capitalization
             if (newUserOrNah == "Yes" || newUserOrNah == "yes")
             {
                 Console.WriteLine("Please enter your name");
                 string enteredName = Console.ReadLine();
 
-
+                // Jeff: Since File.Exists() returns true or false, you don't need to compare it directly to true
+                //  common practice is to use 
+                //      if (File.Exists("a")) { ... }
+                //  OR
+                //      if (!File.Exists("a")) { ... }
+                //  the ! means not, so it's checking if the file does not exist
                 if (File.Exists("./accountbalance.txt") == true)
                 {
                     //opening the needed files

@@ -15,7 +15,8 @@ namespace BankAccounts
        private Double accountBalance;
 
         
-
+        // Jeff: When you don't do any additional logic for a property get and set, there is a shortcut syntax which makes life easier
+       //  checkout auto implemented properties (https://msdn.microsoft.com/en-us/library/bb384054.aspx?f=255&MSPPError=-2147217396)
 
         public string GetName
         
@@ -53,6 +54,8 @@ namespace BankAccounts
         public void WithDrawSetBalance()
         {
             string[] arrayBalance = File.ReadAllLines("./accountbalance.txt");
+
+            // Jeff: I'm thinking this should be ToDouble() as well?, and below in deposit
             int amount = Convert.ToInt32(arrayBalance[0]);
             Console.WriteLine("How mucch money would you like to withdraw? ");
             int amountWithDrawn = Convert.ToInt32(Console.ReadLine());
