@@ -42,7 +42,7 @@ namespace BankAccounts
             
                 Console.WriteLine("How much money would you like to open your account with?");
                 accountBalance = Convert.ToDouble(Console.ReadLine());
-                FileStream fileStream = File.OpenWrite("C:/Users/Emanuel/Documents/BankProject/accountbalance.txt");
+                FileStream fileStream = File.OpenWrite("./accountbalance.txt");
                 TextWriter textWriter = new StreamWriter(fileStream);
                 textWriter.Write(accountBalance);
 
@@ -52,29 +52,29 @@ namespace BankAccounts
 
         public void WithDrawSetBalance()
         {
-            string[] arrayBalance = File.ReadAllLines("C:/Users/Emanuel/Documents/BankProject/accountbalance.txt");
+            string[] arrayBalance = File.ReadAllLines("./accountbalance.txt");
             int amount = Convert.ToInt32(arrayBalance[0]);
             Console.WriteLine("How mucch money would you like to withdraw? ");
             int amountWithDrawn = Convert.ToInt32(Console.ReadLine());
             int newBalance = amount - amountWithDrawn;
             string balanceToBeWritten = Convert.ToString(newBalance);
-            File.WriteAllText("C:/Users/Emanuel/Documents/Bankproject/accountbalance.txt", balanceToBeWritten);
+            File.WriteAllText("./accountbalance.txt", balanceToBeWritten);
             Account account = new Account();
-            string fileContents = File.ReadAllText("C:/Users/Emanuel/Documents/Bankproject/accountbalance.txt");
+            string fileContents = File.ReadAllText("./accountbalance.txt");
             Console.WriteLine("Thank you, your new balance is $" + fileContents);
         }
 
         public void DepositSetBalance()
         {
-            string[] arrayBalance = File.ReadAllLines("C:/Users/Emanuel/Documents/BankProject/accountbalance.txt");
+            string[] arrayBalance = File.ReadAllLines("./accountbalance.txt");
             int amount = Convert.ToInt32(arrayBalance[0]);
             Console.WriteLine("How mucch money would you like to deposit? ");
             int amountAdded = Convert.ToInt32(Console.ReadLine());
             int newBalance = amount + amountAdded;
             string balanceToBeWritten = Convert.ToString(newBalance);
-            File.WriteAllText("C:/Users/Emanuel/Documents/Bankproject/accountbalance.txt", balanceToBeWritten);
+            File.WriteAllText("./accountbalance.txt", balanceToBeWritten);
             Account account = new Account();
-            string fileContents = File.ReadAllText("C:/Users/Emanuel/Documents/Bankproject/accountbalance.txt");
+            string fileContents = File.ReadAllText("./accountbalance.txt");
             Console.WriteLine("Thank you, your new balance is $" + fileContents);
 
         }

@@ -23,10 +23,10 @@ namespace BankAccounts
                 string enteredName = Console.ReadLine();
 
 
-                if (File.Exists("C:/Users/Emanuel/Documents/BankProject/accountbalance.txt") == true)
+                if (File.Exists("./accountbalance.txt") == true)
                 {
                     //opening the needed files
-                    string[] userNameContentsByLine = File.ReadAllLines("C:/Users/Emanuel/Documents/BankProject/UserName.csv");
+                    string[] userNameContentsByLine = File.ReadAllLines("./UserName.csv");
                     while (userNameContentsByLine.Contains(enteredName) == false)
                     {
                         Console.WriteLine("Sorry, that is not a registered user, please try again");
@@ -36,7 +36,7 @@ namespace BankAccounts
                     passedUserName = true;
                     Console.WriteLine("Please enter your password");
                     string enteredPassword = Console.ReadLine();
-                    string[] passwordContentsByLine = File.ReadAllLines("C:/Users/Emanuel/Documents/BankProject/passwords.csv");
+                    string[] passwordContentsByLine = File.ReadAllLines("./passwords.csv");
                     while (passwordContentsByLine.Contains(enteredPassword) != true)
                     {
                         Console.WriteLine("Sorry, that is incorrect \nPlease Try again");
@@ -45,9 +45,9 @@ namespace BankAccounts
                     passedPassword = true;
                 }
 
-                else if (File.Exists("C:/Users/Emanuel/Documents/BankProject/accountbalance.txt") == false)
+                else if (File.Exists("./accountbalance.txt") == false)
                 {
-                    while (File.Exists("C:/Users/Emanuel/Documents/BankProject/UserName.csv") == false)
+                    while (File.Exists("./UserName.csv") == false)
                     {
                         Console.WriteLine("There are no registered users! Please Sign up first!");
                         //Writing to file
@@ -66,7 +66,7 @@ namespace BankAccounts
 
 
                     //opening the needed files
-                    string[] userNameContentsByLine = File.ReadAllLines("C:/Users/Emanuel/Documents/BankProject/UserName.csv");
+                    string[] userNameContentsByLine = File.ReadAllLines("./UserName.csv");
                     while (userNameContentsByLine.Contains(enteredName) == false)
                     {
                         Console.WriteLine("Sorry, that is not a registered user, please try again");
@@ -75,7 +75,7 @@ namespace BankAccounts
                     passedUserName = true;
                     Console.WriteLine("Please enter your password");
                     string enteredPassword = Console.ReadLine();
-                    string[] passwordContentsByLine = File.ReadAllLines("C:/Users/Emanuel/Documents/BankProject/passwords.csv");
+                    string[] passwordContentsByLine = File.ReadAllLines("./passwords.csv");
                     while (passwordContentsByLine.Contains(enteredPassword) != true)
                     {
                         Console.WriteLine("Sorry, that is incorrect \nPlease Try again");
@@ -94,11 +94,13 @@ namespace BankAccounts
 
             else if (newUserOrNah == "No" || newUserOrNah == "no")
             {
+                // Jeff: I changed the paths above to be relative (./filename) so that the code is self-contained and we don't have to share the same full paths
+                //  therefore we don't need to create directories because it lives where the code is
+                //if (Directory.Exists("C:/Users/Emanuel/Documents/BankProject") != true)
+                //{
+                //    Directory.CreateDirectory("C:/Users/Emanuel/Documents/BankProject");
+                //}
 
-                if (Directory.Exists("C:/Users/Emanuel/Documents/BankProject") != true)
-                {
-                    Directory.CreateDirectory("C:/Users/Emanuel/Documents/BankProject");
-                }
                 //Writing to file
                 Console.WriteLine("Please enter your name...");
                 UserInfo.MakingUserNames();
@@ -115,7 +117,7 @@ namespace BankAccounts
 
 
                 //logging in
-                string[] userNameContentsByLine = File.ReadAllLines("C:/Users/Emanuel/Documents/BankProject/UserName.csv");
+                string[] userNameContentsByLine = File.ReadAllLines("./UserName.csv");
                 Console.WriteLine("Thank you for signing up for Emanuel's Bank! \nTo login please enter your name");
                 string enteredName = Console.ReadLine();
                 while (userNameContentsByLine.Contains(enteredName) == false)
@@ -126,7 +128,7 @@ namespace BankAccounts
                 passedUserName = true;
                 Console.WriteLine("Please enter your password");
                 string enteredPassword = Console.ReadLine();
-                string[] passwordContentsByLine = File.ReadAllLines("C:/Users/Emanuel/Documents/BankProject/passwords.csv");
+                string[] passwordContentsByLine = File.ReadAllLines("./passwords.csv");
                 while (passwordContentsByLine.Contains(enteredPassword) != true)
                 {
                     Console.WriteLine("Sorry, that is incorrect \nPlease try again");
@@ -155,7 +157,7 @@ namespace BankAccounts
                     if (whatUserWants == "1")
                     {
                         //opening files
-                        string[] arrayBalance = File.ReadAllLines("C:/Users/Emanuel/Documents/BankProject/accountbalance.txt");
+                        string[] arrayBalance = File.ReadAllLines("./accountbalance.txt");
 
                         Console.WriteLine("You have $" + arrayBalance[0] + " in your account");
                     }
