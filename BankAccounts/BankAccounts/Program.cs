@@ -32,6 +32,7 @@ namespace BankAccounts
                         Console.WriteLine("Sorry, that is not a registered user, please try again");
                         enteredName = Console.ReadLine();
                     }
+
                     passedUserName = true;
                     Console.WriteLine("Please enter your password");
                     string enteredPassword = Console.ReadLine();
@@ -148,7 +149,7 @@ namespace BankAccounts
                 //What does the user want to do?
                 Console.WriteLine("To check account balance, press 1 \nTo withdraw money press 2 \nTo deposit money press 3");
                 string whatUserWants = Console.ReadLine();
-                while (whatUserWants == "1" || whatUserWants == "2" || whatUserWants == "3")
+                while (whatUserWants == "1" || whatUserWants == "2" || whatUserWants == "3" || whatUserWants == "7")
                 {
 
                     if (whatUserWants == "1")
@@ -179,14 +180,7 @@ namespace BankAccounts
                     whatUserWants = Console.ReadLine();
                 }
 
-                if (whatUserWants != "1" || whatUserWants != "2" || whatUserWants != "3")
-                {
-                    Console.WriteLine("That is not an option! Please choose a valid option... \nTo check account balance, press 1 \nTo withdraw money press 2 \nTo deposit money press 3");
-                    whatUserWants = Console.ReadLine();
-
-                }
             }
-
            
         }
     }
