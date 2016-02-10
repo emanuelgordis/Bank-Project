@@ -1,0 +1,18 @@
+c:\users\emanuel\documents\visual studio 2015\Projects\BankAccounts\BankAccounts\bin\Debug\BankAccounts.exe.config
+c:\users\emanuel\documents\visual studio 2015\Projects\BankAccounts\BankAccounts\obj\Debug\BankAccounts.csprojResolveAssemblyReference.cache
+c:\users\emanuel\documents\visual studio 2015\Projects\BankAccounts\BankAccounts\bin\Debug\BankAccounts.exe
+c:\users\emanuel\documents\visual studio 2015\Projects\BankAccounts\BankAccounts\bin\Debug\BankAccounts.pdb
+c:\users\emanuel\documents\visual studio 2015\Projects\BankAccounts\BankAccounts\obj\Debug\BankAccounts.exe
+c:\users\emanuel\documents\visual studio 2015\Projects\BankAccounts\BankAccounts\obj\Debug\BankAccounts.pdb
+C:\Users\Emanuel\Downloads\BankAccounts-2016-02-06\BankAccounts\BankAccounts\bin\Debug\BankAccounts.exe.config
+C:\Users\Emanuel\Downloads\BankAccounts-2016-02-06\BankAccounts\BankAccounts\obj\Debug\BankAccounts.exe
+C:\Users\Emanuel\Downloads\BankAccounts-2016-02-06\BankAccounts\BankAccounts\obj\Debug\BankAccounts.pdb
+C:\Users\Emanuel\Downloads\BankAccounts-2016-02-06\BankAccounts\BankAccounts\bin\Debug\BankAccounts.exe
+C:\Users\Emanuel\Downloads\BankAccounts-2016-02-06\BankAccounts\BankAccounts\bin\Debug\BankAccounts.pdb
+C:\Users\Emanuel\Downloads\BankAccounts-2016-02-06\BankAccounts\BankAccounts\obj\Debug\BankAccounts.csprojResolveAssemblyReference.cache
+C:\Users\Emanuel\Downloads\BankAccounts\BankAccounts\bin\Debug\BankAccounts.exe.config
+C:\Users\Emanuel\Downloads\BankAccounts\BankAccounts\obj\Debug\BankAccounts.exe
+C:\Users\Emanuel\Downloads\BankAccounts\BankAccounts\obj\Debug\BankAccounts.pdb
+C:\Users\Emanuel\Downloads\BankAccounts\BankAccounts\bin\Debug\BankAccounts.exe
+C:\Users\Emanuel\Downloads\BankAccounts\BankAccounts\bin\Debug\BankAccounts.pdb
+C:\Users\Emanuel\Downloads\BankAccounts\BankAccounts\obj\Debug\BankAccounts.csprojResolveAssemblyReference.cache
