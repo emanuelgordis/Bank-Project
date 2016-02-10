@@ -11,6 +11,7 @@ namespace BankAccounts
     {
         static void Main(string[] args)
         {
+            //see if this syncs to github....
             bool passedUserName = false;
             bool passedPassword = false;
             //making a new account or logging in

@@ -16,3 +16,6 @@ C:\Users\Emanuel\Downloads\BankAccounts\BankAccounts\obj\Debug\BankAccounts.pdb
 C:\Users\Emanuel\Downloads\BankAccounts\BankAccounts\bin\Debug\BankAccounts.exe
 C:\Users\Emanuel\Downloads\BankAccounts\BankAccounts\bin\Debug\BankAccounts.pdb
 C:\Users\Emanuel\Downloads\BankAccounts\BankAccounts\obj\Debug\BankAccounts.csprojResolveAssemblyReference.cache
+C:\Users\Emanuel\Documents\Bank-Project\BankAccounts\BankAccounts\bin\Debug\BankAccounts.exe.config
+C:\Users\Emanuel\Documents\Bank-Project\BankAccounts\BankAccounts\obj\Debug\BankAccounts.exe
+C:\Users\Emanuel\Documents\Bank-Project\BankAccounts\BankAccounts\obj\Debug\BankAccounts.pdb
