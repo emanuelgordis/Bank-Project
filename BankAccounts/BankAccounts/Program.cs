@@ -17,9 +17,8 @@ namespace BankAccounts
             //making a new account or logging in
             Console.WriteLine("Welcome to Emanuel's bank! \nDo you have an account already? Yes/No");
             string newUserOrNah = Console.ReadLine();
-            newUserOrNah.ToLower()
             // Jeff: you can use newUserOrNah.ToLower() == "yes" to simplify and do a single check regardless or capitalization
-            if (newUserOrNah == "Yes" || newUserOrNah == "yes")
+            if (newUserOrNah.ToLower() == "yes")
             {
                 Console.WriteLine("Please enter your name");
                 string enteredName = Console.ReadLine();
@@ -30,7 +29,7 @@ namespace BankAccounts
                 //  OR
                 //      if (!File.Exists("a")) { ... }
                 //  the ! means not, so it's checking if the file does not exist
-                if (File.Exists("./accountbalance.txt") == true)
+                if (File.Exists("./accountbalance.txt"))
                 {
                     //opening the needed files
                     string[] userNameContentsByLine = File.ReadAllLines("./UserName.csv");
@@ -52,7 +51,7 @@ namespace BankAccounts
                     passedPassword = true;
                 }
 
-                else if (File.Exists("./accountbalance.txt") == false)
+                else if (!File.Exists("./accountbalance.txt"))
                 {
                     while (File.Exists("./UserName.csv") == false)
                     {

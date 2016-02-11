@@ -14,7 +14,7 @@ namespace BankAccounts
         {
             string userInput = Console.ReadLine();
             Account account = new Account();
-            account.SetName = userInput;
+            account.GetName = userInput;
                 List<string> listOfNames = new List<string>();
                 listOfNames.Add(userInput);
 

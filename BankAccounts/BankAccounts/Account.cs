@@ -18,22 +18,8 @@ namespace BankAccounts
         // Jeff: When you don't do any additional logic for a property get and set, there is a shortcut syntax which makes life easier
        //  checkout auto implemented properties (https://msdn.microsoft.com/en-us/library/bb384054.aspx?f=255&MSPPError=-2147217396)
 
-        public string GetName
-        
-        {
-            get
-            {
-                return userName;
-            }
-        }
+        public string GetName { get; set; }
 
-        public string SetName
-        {
-            set
-            {
-                userName = value;
-            }
-        }
         public Double GetBalance()
         {
             return accountBalance;
@@ -56,10 +42,10 @@ namespace BankAccounts
             string[] arrayBalance = File.ReadAllLines("./accountbalance.txt");
 
             // Jeff: I'm thinking this should be ToDouble() as well?, and below in deposit
-            int amount = Convert.ToInt32(arrayBalance[0]);
+            double amount = Convert.ToDouble(arrayBalance[0]);
             Console.WriteLine("How mucch money would you like to withdraw? ");
-            int amountWithDrawn = Convert.ToInt32(Console.ReadLine());
-            int newBalance = amount - amountWithDrawn;
+            double amountWithDrawn = Convert.ToDouble(Console.ReadLine());
+            double newBalance = amount - amountWithDrawn;
             string balanceToBeWritten = Convert.ToString(newBalance);
             File.WriteAllText("./accountbalance.txt", balanceToBeWritten);
             Account account = new Account();
@@ -70,10 +56,10 @@ namespace BankAccounts
         public void DepositSetBalance()
         {
             string[] arrayBalance = File.ReadAllLines("./accountbalance.txt");
-            int amount = Convert.ToInt32(arrayBalance[0]);
+            double amount = Convert.ToDouble(arrayBalance[0]);
             Console.WriteLine("How mucch money would you like to deposit? ");
             int amountAdded = Convert.ToInt32(Console.ReadLine());
-            int newBalance = amount + amountAdded;
+            double newBalance = amount + amountAdded;
             string balanceToBeWritten = Convert.ToString(newBalance);
             File.WriteAllText("./accountbalance.txt", balanceToBeWritten);
             Account account = new Account();
