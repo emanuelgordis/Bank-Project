@@ -23,17 +23,13 @@ namespace BankAccounts
                 Console.WriteLine("Please enter your name");
                 string enteredName = Console.ReadLine();
 
-                // Jeff: Since File.Exists() returns true or false, you don't need to compare it directly to true
-                //  common practice is to use 
-                //      if (File.Exists("a")) { ... }
-                //  OR
-                //      if (!File.Exists("a")) { ... }
-                //  the ! means not, so it's checking if the file does not exist
+               
                 if (File.Exists("./accountbalance.txt"))
                 {
                     //opening the needed files
-                    string[] userNameContentsByLine = File.ReadAllLines("./UserName.csv");
-                    while (userNameContentsByLine.Contains(enteredName) == false)
+                    UserInfo userInfo = new UserInfo();
+                    string realUserName = userInfo.userName;
+                    while ((realUserName == enteredName) == false)
                     {
                         Console.WriteLine("Sorry, that is not a registered user, please try again");
                         enteredName = Console.ReadLine();
@@ -42,8 +38,8 @@ namespace BankAccounts
                     passedUserName = true;
                     Console.WriteLine("Please enter your password");
                     string enteredPassword = Console.ReadLine();
-                    string[] passwordContentsByLine = File.ReadAllLines("./passwords.csv");
-                    while (passwordContentsByLine.Contains(enteredPassword) != true)
+                    string realUserPassword = userInfo.userPassword;
+                    while ((realUserPassword == enteredPassword) != true)
                     {
                         Console.WriteLine("Sorry, that is incorrect \nPlease Try again");
                         enteredPassword = Console.ReadLine();
@@ -58,12 +54,12 @@ namespace BankAccounts
                         Console.WriteLine("There are no registered users! Please Sign up first!");
                         //Writing to file
                         Console.WriteLine("Please enter your name...");
-                        UserInfo.MakingUserNames();
+                        //UserInfo.MakingUserNames();
 
 
                         //making the password
                         Console.WriteLine("Please Enter a password...");
-                        UserInfo.MakingPasswords();
+                       // UserInfo.MakingPasswords();
 
                         //Setting the balance
                         Account account = new Account();
@@ -100,32 +96,41 @@ namespace BankAccounts
 
             else if (newUserOrNah == "No" || newUserOrNah == "no")
             {
-                // Jeff: I changed the paths above to be relative (./filename) so that the code is self-contained and we don't have to share the same full paths
-                //  therefore we don't need to create directories because it lives where the code is
-                //if (Directory.Exists("C:/Users/Emanuel/Documents/BankProject") != true)
-                //{
-                //    Directory.CreateDirectory("C:/Users/Emanuel/Documents/BankProject");
-                //}
+                Console.WriteLine("Please enter your name");
+                string enteredName = Console.ReadLine();
+                using (var db = new UserContext())
+                {
+                    var User = new UserInfo() { userName = enteredName };
 
-                //Writing to file
-                Console.WriteLine("Please enter your name...");
-                UserInfo.MakingUserNames();
+                }
 
 
                 //making the password
                 Console.WriteLine("Please Enter a password...");
-                UserInfo.MakingPasswords();
+                string enteredPassword = Console.ReadLine();
+
+                using (var db = new UserContext())
+                {
+                    var User = new UserInfo() { userPassword = enteredPassword };
+
+                }
 
                 //Setting the balance
                 Account account = new Account();
-                account.SetNewBalance();
+                Console.WriteLine("How much money would you like to open your account with?");
+                double enteredAccountBalance = Convert.ToDouble(Console.ReadLine());
+                using (var db = new UserContext())
+                {
+                    var Balance = new AccountInfo() { accountBalance = enteredAccountBalance };
+
+                }
 
 
 
                 //logging in
                 string[] userNameContentsByLine = File.ReadAllLines("./UserName.csv");
                 Console.WriteLine("Thank you for signing up for Emanuel's Bank! \nTo login please enter your name");
-                string enteredName = Console.ReadLine();
+                string enteredName1 = Console.ReadLine();
                 while (userNameContentsByLine.Contains(enteredName) == false)
                 {
                     Console.WriteLine("Sorry, that is not a registered user, please try again");
@@ -133,7 +138,7 @@ namespace BankAccounts
                 }
                 passedUserName = true;
                 Console.WriteLine("Please enter your password");
-                string enteredPassword = Console.ReadLine();
+                string enteredPassword1 = Console.ReadLine();
                 string[] passwordContentsByLine = File.ReadAllLines("./passwords.csv");
                 while (passwordContentsByLine.Contains(enteredPassword) != true)
                 {

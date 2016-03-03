@@ -4,36 +4,31 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Data.Entity;
 
 namespace BankAccounts
 {
-    class UserInfo
+    public class UserInfo
     {
 
-        public static void MakingUserNames()
-        {
-            string userInput = Console.ReadLine();
-            Account account = new Account();
-            account.GetName = userInput;
-                List<string> listOfNames = new List<string>();
-                listOfNames.Add(userInput);
+        public string userName { get; set; }
+        public string userPassword { get; set; }
 
-
-                string[] namesInArray = listOfNames.ToArray();
-
-                File.WriteAllLines("./UserName.csv", namesInArray);
-            
-            
-        }
-        public static void MakingPasswords()
-        {
-            string userInput = Console.ReadLine();
-            List<string> listOfPasswords = new List<string>();
-            listOfPasswords.Add(userInput);
-
-            Account account = new Account();
-            string[] passwordsInArray = listOfPasswords.ToArray();
-            File.WriteAllLines("./passwords.csv", passwordsInArray);
-        }
+        public virtual List<AccountInfo> AccountInfo { get; set; }
     }
+
+    public class AccountInfo
+    {
+        public double accountBalance { get; set; }
+
+        public virtual UserInfo UserInfo { get; set; }
+    }
+
+    public class UserContext : DbContext
+    {
+        public DbSet<UserInfo> UserInfo { get; set; }
+        public DbSet<AccountInfo> AccountInfo { get; set; }
+    }
+
+
 }
