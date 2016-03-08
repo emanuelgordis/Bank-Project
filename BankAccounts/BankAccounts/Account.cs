@@ -9,9 +9,8 @@ namespace BankAccounts
 {
     class Account
     {
-        private string userName;
-       private string userPassword;
-       private Int32 accountNumber;
+       
+       
        private Double accountBalance;
 
         
