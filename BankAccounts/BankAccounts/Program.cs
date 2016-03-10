@@ -41,24 +41,22 @@ namespace BankAccounts
                     {
                         //opening the needed files
                         User user = new User();
-                        var users = dbContext.Users.FirstOrDefault(x => x.Username == enteredName);
                         Console.WriteLine("Please enter your password");
                         string enteredPassword = Console.ReadLine();
-                        var userPassword = dbContext.Users.Where(x => x.Password == enteredPassword);
-                        while (users == null)
+                        var userNameAndPassword = dbContext.Users.FirstOrDefault(x => x.Password == enteredPassword && x.Username == enteredName);
+                       
+                        while (userNameAndPassword == null)
                         {
-                            Console.WriteLine("Sorry, that is not a registered user, please try again");
+                            Console.WriteLine("Sorry, username or password is incorrect \nPlease Try again");
                             enteredName = Console.ReadLine();
+                            Console.WriteLine("Please enter your password");
+                            enteredPassword = Console.ReadLine();
+                            userNameAndPassword = dbContext.Users.FirstOrDefault(x => x.Password == enteredPassword && x.Username == enteredName);
                         }
                         passedUserName = true;
-                        while (userPassword == null)
-                        {
-                            Console.WriteLine("Sorry, password is incorrect \nPlease Try again");
-                            enteredPassword = Console.ReadLine();
-                        }
                         passedPassword = true;
 
-                        loggedUserId = users.UserId;
+                        loggedUserId = userNameAndPassword.UserId;
                     }
                 }
                 else if (accountQuantity == 0)
@@ -205,11 +203,18 @@ namespace BankAccounts
 
                         if (whatUserWants == "1")
                         {
-                            //opening files
-                            Account account = new Account();
-                            decimal balance = account.Balance;
-
-                            Console.WriteLine("You have $" + balance + " in your account");
+                            using (var dbContext = new BankProjectEntities())
+                            {  
+                                var account2 = dbContext.Accounts.FirstOrDefault(x => x.AccountId == loggedUserId);
+                                if (account2 != null)
+                                {
+                                    
+                                    decimal balance = account2.Balance;
+                                    Console.WriteLine("Your balance is $" + balance);
+                                  
+                                }
+                            }
+                            
                         }
 
                         else if (whatUserWants == "2")
@@ -220,12 +225,13 @@ namespace BankAccounts
                             using(var dbContext = new BankProjectEntities())
                             {
                                 int accountId = loggedUserId;
-                                var account2 = dbContext.Accounts.Where(x => x.AccountId == accountId);
+                                var account2 = dbContext.Accounts.FirstOrDefault(x => x.AccountId == accountId);
                                 if(account2 != null)
                                 {
                                     Account anotherAccount = new Account();
                                     decimal newBalance = anotherAccount.Balance - withDrawAmount;
                                     Console.WriteLine("Thank you, your new balance is $" + newBalance);
+                                    anotherAccount.Balance = newBalance;
                                 }
                             }
                             
@@ -234,7 +240,20 @@ namespace BankAccounts
                         else if (whatUserWants == "3")
                         {
                             Account account = new Account();
-                           // account.DepositSetBalance();
+                            Console.WriteLine("How much money would you like to deposit in your account?");
+                            decimal depositAmount = Convert.ToDecimal(Console.ReadLine());
+                            using (var dbContext = new BankProjectEntities())
+                            {
+                                int accountId = loggedUserId;
+                                var account2 = dbContext.Accounts.FirstOrDefault(x => x.AccountId == accountId);
+                                if (account2 != null)
+                                {
+                                    Account anotherAccount = new Account();
+                                    decimal newBalance = anotherAccount.Balance + depositAmount;
+                                    Console.WriteLine("Thank you, your new balance is $" + newBalance);
+                                    anotherAccount.Balance = newBalance;
+                                }
+                            }
                         }
                         else if (whatUserWants == "7")
                         {
