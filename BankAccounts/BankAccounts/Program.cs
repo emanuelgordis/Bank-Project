@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using BankAccounts.Data;
 
 namespace BankAccounts
 {
@@ -11,185 +12,242 @@ namespace BankAccounts
     {
         static void Main(string[] args)
         {
-            //see if this syncs to github....
+
+            using (var dbContext = new BankProjectEntities())
+
+            {
+
+                Console.WriteLine("There are currently {0} accounts in the database", dbContext.Accounts.Count());
+
+            }
+
+
+
             bool passedUserName = false;
             bool passedPassword = false;
+            int loggedUserId = 0;
             //making a new account or logging in
             Console.WriteLine("Welcome to Emanuel's bank! \nDo you have an account already? Yes/No");
             string newUserOrNah = Console.ReadLine();
-            // Jeff: you can use newUserOrNah.ToLower() == "yes" to simplify and do a single check regardless or capitalization
             if (newUserOrNah.ToLower() == "yes")
             {
+                BankProjectEntities accounts = new BankProjectEntities();
+                int accountQuantity = accounts.Accounts.Count();
                 Console.WriteLine("Please enter your name");
                 string enteredName = Console.ReadLine();
-
-                // Jeff: Since File.Exists() returns true or false, you don't need to compare it directly to true
-                //  common practice is to use 
-                //      if (File.Exists("a")) { ... }
-                //  OR
-                //      if (!File.Exists("a")) { ... }
-                //  the ! means not, so it's checking if the file does not exist
-                if (File.Exists("./accountbalance.txt"))
+                if (accountQuantity != 0)
                 {
-                    //opening the needed files
-                    string[] userNameContentsByLine = File.ReadAllLines("./UserName.csv");
-                    while (userNameContentsByLine.Contains(enteredName) == false)
+                    using (var dbContext = new BankProjectEntities())
                     {
-                        Console.WriteLine("Sorry, that is not a registered user, please try again");
-                        enteredName = Console.ReadLine();
-                    }
+                        //opening the needed files
+                        User user = new User();
+                        var users = dbContext.Users.FirstOrDefault(x => x.Username == enteredName);
+                        Console.WriteLine("Please enter your password");
+                        string enteredPassword = Console.ReadLine();
+                        var userPassword = dbContext.Users.Where(x => x.Password == enteredPassword);
+                        while (users == null)
+                        {
+                            Console.WriteLine("Sorry, that is not a registered user, please try again");
+                            enteredName = Console.ReadLine();
+                        }
+                        passedUserName = true;
+                        while (userPassword == null)
+                        {
+                            Console.WriteLine("Sorry, password is incorrect \nPlease Try again");
+                            enteredPassword = Console.ReadLine();
+                        }
+                        passedPassword = true;
 
-                    passedUserName = true;
-                    Console.WriteLine("Please enter your password");
-                    string enteredPassword = Console.ReadLine();
-                    string[] passwordContentsByLine = File.ReadAllLines("./passwords.csv");
-                    while (passwordContentsByLine.Contains(enteredPassword) != true)
-                    {
-                        Console.WriteLine("Sorry, that is incorrect \nPlease Try again");
-                        enteredPassword = Console.ReadLine();
+                        loggedUserId = users.UserId;
                     }
-                    passedPassword = true;
                 }
-
-                else if (!File.Exists("./accountbalance.txt"))
+                else if (accountQuantity == 0)
                 {
-                    while (File.Exists("./UserName.csv") == false)
+                    Console.WriteLine("There are no registered user! \n To sign up please enter your name");
+                    string name = Console.ReadLine();
+                    //making the password
+                    Console.WriteLine("Please Enter a password...");
+                    string enteredPassword = Console.ReadLine();
+                    using (var dbContext = new BankProjectEntities())
+
                     {
-                        Console.WriteLine("There are no registered users! Please Sign up first!");
-                        //Writing to file
-                        Console.WriteLine("Please enter your name...");
-                        UserInfo.MakingUserNames();
+
+                        var user = new User
+
+                        {
+
+                            Username = name,
+
+                            Password = enteredPassword
+
+                        };
 
 
-                        //making the password
-                        Console.WriteLine("Please Enter a password...");
-                        UserInfo.MakingPasswords();
+
 
                         //Setting the balance
                         Account account = new Account();
-                        account.SetNewBalance();
+                        Console.WriteLine("How much money would you like to open your account with?");
+                        decimal enteredAccountBalance = Convert.ToDecimal(Console.ReadLine());
+                        var account2 = new Data.Account
+
+                        {
+
+                            Balance = enteredAccountBalance,
+
+                            CreatedDate = DateTime.Now,
+
+                            ModifiedDate = DateTime.Now,
+
+                            User = user
+
+                        };
+
+                        dbContext.Accounts.Add(account2);
+                        dbContext.SaveChanges();
+
+
                     }
 
+                    Console.WriteLine("Thank you for logging in today");
 
-                    //opening the needed files
-                    string[] userNameContentsByLine = File.ReadAllLines("./UserName.csv");
-                    while (userNameContentsByLine.Contains(enteredName) == false)
-                    {
-                        Console.WriteLine("Sorry, that is not a registered user, please try again");
 
-                    }
-                    passedUserName = true;
-                    Console.WriteLine("Please enter your password");
+
+
+
+                }
+
+                else if (newUserOrNah == "No" || newUserOrNah == "no")
+                {
+                    Console.WriteLine("Please enter your name");
+                    string name = Console.ReadLine();
+                    //making the password
+                    Console.WriteLine("Please Enter a password...");
                     string enteredPassword = Console.ReadLine();
-                    string[] passwordContentsByLine = File.ReadAllLines("./passwords.csv");
-                    while (passwordContentsByLine.Contains(enteredPassword) != true)
+                    using (var dbContext = new BankProjectEntities())
+
                     {
-                        Console.WriteLine("Sorry, that is incorrect \nPlease Try again");
-                        enteredPassword = Console.ReadLine();
+
+                        var user = new User
+
+                        {
+
+                            Username = name,
+
+                            Password = enteredPassword
+
+                        };
+
+
+
+
+                        //Setting the balance
+                        Account account = new Account();
+                        Console.WriteLine("How much money would you like to open your account with?");
+                        decimal enteredAccountBalance = Convert.ToDecimal(Console.ReadLine());
+                        var account2 = new Data.Account
+
+                        {
+
+                            Balance = enteredAccountBalance,
+
+                            CreatedDate = DateTime.Now,
+
+                            ModifiedDate = DateTime.Now,
+
+                            User = user
+
+                        };
+
+                        dbContext.Accounts.Add(account2);
+                        dbContext.SaveChanges();
+
+
+
+                        //logging in
+                        string realUserName = user.Username;
+                        Console.WriteLine("Thank you for signing up for Emanuel's Bank! \nTo login please enter your name");
+                        string enteredName1 = Console.ReadLine();
+                        while ((enteredName1 == realUserName) != true)
+                        {
+                            Console.WriteLine("Sorry, that is not a registered user, please try again");
+                            enteredName = Console.ReadLine();
+                        }
+                        passedUserName = true;
+                        Console.WriteLine("Please enter your password");
+                        string enteredPassword1 = Console.ReadLine();
+                        string realUserPassword = user.Password;
+                        while ((enteredPassword == realUserPassword) != true)
+                        {
+                            Console.WriteLine("Sorry, that is incorrect \nPlease try again");
+                            enteredPassword = Console.ReadLine();
+                        }
+                        passedPassword = true;
                     }
-                    passedPassword = true;
                 }
 
-                Console.WriteLine("Thank you for logging in today");
-
-
-
-
-
-            }
-
-            else if (newUserOrNah == "No" || newUserOrNah == "no")
-            {
-                // Jeff: I changed the paths above to be relative (./filename) so that the code is self-contained and we don't have to share the same full paths
-                //  therefore we don't need to create directories because it lives where the code is
-                //if (Directory.Exists("C:/Users/Emanuel/Documents/BankProject") != true)
-                //{
-                //    Directory.CreateDirectory("C:/Users/Emanuel/Documents/BankProject");
-                //}
-
-                //Writing to file
-                Console.WriteLine("Please enter your name...");
-                UserInfo.MakingUserNames();
-
-
-                //making the password
-                Console.WriteLine("Please Enter a password...");
-                UserInfo.MakingPasswords();
-
-                //Setting the balance
-                Account account = new Account();
-                account.SetNewBalance();
-
-
-
-                //logging in
-                string[] userNameContentsByLine = File.ReadAllLines("./UserName.csv");
-                Console.WriteLine("Thank you for signing up for Emanuel's Bank! \nTo login please enter your name");
-                string enteredName = Console.ReadLine();
-                while (userNameContentsByLine.Contains(enteredName) == false)
+                else
                 {
-                    Console.WriteLine("Sorry, that is not a registered user, please try again");
-                    enteredName = Console.ReadLine();
-                }
-                passedUserName = true;
-                Console.WriteLine("Please enter your password");
-                string enteredPassword = Console.ReadLine();
-                string[] passwordContentsByLine = File.ReadAllLines("./passwords.csv");
-                while (passwordContentsByLine.Contains(enteredPassword) != true)
-                {
-                    Console.WriteLine("Sorry, that is incorrect \nPlease try again");
-                    enteredPassword = Console.ReadLine();
-                }
-                passedPassword = true;
-            }
+                    if (newUserOrNah != "Yes" && newUserOrNah != "yes" && newUserOrNah != "No" && newUserOrNah != "no")
 
-            else
-            {
-                    if(newUserOrNah != "Yes" && newUserOrNah != "yes" && newUserOrNah != "No" && newUserOrNah != "no")
-                        
-                    Console.WriteLine("That is not a valid answer, are you a new user?");
-                        
+                        Console.WriteLine("That is not a valid answer, are you a new user?");
+
                     newUserOrNah = Console.ReadLine();
-            }
+                }
 
-            if (passedUserName == true && passedPassword == true)
-            {
-                //What does the user want to do?
-                Console.WriteLine("To check account balance, press 1 \nTo withdraw money press 2 \nTo deposit money press 3");
-                string whatUserWants = Console.ReadLine();
-                while (whatUserWants == "1" || whatUserWants == "2" || whatUserWants == "3" || whatUserWants == "7")
+                if (passedUserName == true && passedPassword == true)
                 {
-
-                    if (whatUserWants == "1")
+                    //What does the user want to do?
+                    Console.WriteLine("To check account balance, press 1 \nTo withdraw money press 2 \nTo deposit money press 3");
+                    string whatUserWants = Console.ReadLine();
+                    while (whatUserWants == "1" || whatUserWants == "2" || whatUserWants == "3" || whatUserWants == "7")
                     {
-                        //opening files
-                        string[] arrayBalance = File.ReadAllLines("./accountbalance.txt");
 
-                        Console.WriteLine("You have $" + arrayBalance[0] + " in your account");
+                        if (whatUserWants == "1")
+                        {
+                            //opening files
+                            Account account = new Account();
+                            decimal balance = account.Balance;
+
+                            Console.WriteLine("You have $" + balance + " in your account");
+                        }
+
+                        else if (whatUserWants == "2")
+                        {
+                            Account account = new Account();
+                            Console.WriteLine("How much money would you like to withdraw from your account?");
+                            decimal withDrawAmount = Convert.ToDecimal(Console.ReadLine());
+                            using(var dbContext = new BankProjectEntities())
+                            {
+                                int accountId = loggedUserId;
+                                var account2 = dbContext.Accounts.Where(x => x.AccountId == accountId);
+                                if(account2 != null)
+                                {
+                                    Account anotherAccount = new Account();
+                                    decimal newBalance = anotherAccount.Balance - withDrawAmount;
+                                    Console.WriteLine("Thank you, your new balance is $" + newBalance);
+                                }
+                            }
+                            
+                        }
+
+                        else if (whatUserWants == "3")
+                        {
+                            Account account = new Account();
+                           // account.DepositSetBalance();
+                        }
+                        else if (whatUserWants == "7")
+                        {
+                            Environment.Exit(1);
+                        }
+
+                        Console.WriteLine("To exit press 7 \nTo check account balance, press 1 \nTo withdraw money press 2 \nTo deposit money press 3");
+                        whatUserWants = Console.ReadLine();
                     }
 
-                    else if (whatUserWants == "2")
-                    {
-                        Account account = new Account();
-                        account.WithDrawSetBalance();
-                    }
-
-                    else if (whatUserWants == "3")
-                    {
-                        Account account = new Account();
-                        account.DepositSetBalance();
-                    }
-                    else if (whatUserWants == "7")
-                    {
-                        Environment.Exit(1);
-                    }
-
-                    Console.WriteLine("To exit press 7 \nTo check account balance, press 1 \nTo withdraw money press 2 \nTo deposit money press 3");
-                    whatUserWants = Console.ReadLine();
                 }
 
             }
-           
         }
     }
 }
