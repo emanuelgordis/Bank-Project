@@ -13,13 +13,7 @@ namespace BankAccounts
         static void Main(string[] args)
         {
 
-            using (var dbContext = new BankProjectEntities())
-
-            {
-
-                Console.WriteLine("There are currently {0} accounts in the database", dbContext.Accounts.Count());
-
-            }
+           
 
 
 
@@ -44,7 +38,7 @@ namespace BankAccounts
                         Console.WriteLine("Please enter your password");
                         string enteredPassword = Console.ReadLine();
                         var userNameAndPassword = dbContext.Users.FirstOrDefault(x => x.Password == enteredPassword && x.Username == enteredName);
-                       
+
                         while (userNameAndPassword == null)
                         {
                             Console.WriteLine("Sorry, username or password is incorrect \nPlease Try again");
@@ -111,7 +105,7 @@ namespace BankAccounts
 
 
 
-
+                  }
 
                 }
 
@@ -163,42 +157,47 @@ namespace BankAccounts
 
 
                         //logging in
-                        string realUserName = user.Username;
+                        
                         Console.WriteLine("Thank you for signing up for Emanuel's Bank! \nTo login please enter your name");
                         string enteredName1 = Console.ReadLine();
-                        while ((enteredName1 == realUserName) != true)
+                        using (var dbContext2 = new BankProjectEntities())
                         {
-                            Console.WriteLine("Sorry, that is not a registered user, please try again");
-                            enteredName = Console.ReadLine();
+                            //opening the needed files
+                            User user2 = new User();
+                            Console.WriteLine("Please enter your password");
+                            string enteredPassword2 = Console.ReadLine();
+                            var userNameAndPassword = dbContext.Users.FirstOrDefault(x => x.Password == enteredPassword2 && x.Username == enteredName1);
+
+                            while (userNameAndPassword == null)
+                            {
+                                Console.WriteLine("Sorry, username or password is incorrect \nPlease Try again");
+                                enteredName1 = Console.ReadLine();
+                                Console.WriteLine("Please enter your password");
+                                enteredPassword = Console.ReadLine();
+                                userNameAndPassword = dbContext.Users.FirstOrDefault(x => x.Password == enteredPassword2 && x.Username == enteredName1);
+                            }
+                            passedUserName = true;
+                            passedPassword = true;
+
+                            loggedUserId = userNameAndPassword.UserId;
                         }
-                        passedUserName = true;
-                        Console.WriteLine("Please enter your password");
-                        string enteredPassword1 = Console.ReadLine();
-                        string realUserPassword = user.Password;
-                        while ((enteredPassword == realUserPassword) != true)
-                        {
-                            Console.WriteLine("Sorry, that is incorrect \nPlease try again");
-                            enteredPassword = Console.ReadLine();
-                        }
-                        passedPassword = true;
                     }
                 }
 
                 else
                 {
-                    if (newUserOrNah != "Yes" && newUserOrNah != "yes" && newUserOrNah != "No" && newUserOrNah != "no")
+                    if(newUserOrNah.ToLower() != "Yes" || newUserOrNah.ToLower() != "No")
 
                         Console.WriteLine("That is not a valid answer, are you a new user?");
-
-                    newUserOrNah = Console.ReadLine();
+                        newUserOrNah = Console.ReadLine();
                 }
 
                 if (passedUserName == true && passedPassword == true)
                 {
                     //What does the user want to do?
-                    Console.WriteLine("To check account balance, press 1 \nTo withdraw money press 2 \nTo deposit money press 3");
+                    Console.WriteLine("To check account balance, press 1 \nTo withdraw money press 2 \nTo deposit money press 3 \nTo transfer money to another account press 4");
                     string whatUserWants = Console.ReadLine();
-                    while (whatUserWants == "1" || whatUserWants == "2" || whatUserWants == "3" || whatUserWants == "7")
+                    while (whatUserWants == "1" || whatUserWants == "2" || whatUserWants == "3" || whatUserWants == "4" || whatUserWants == "7")
                     {
 
                         if (whatUserWants == "1")
@@ -255,6 +254,36 @@ namespace BankAccounts
                                 }
                             }
                         }
+                        
+                        else if(whatUserWants == "4")
+                    {
+                        Console.WriteLine("Please enter the username to which you'd like to send money to");
+                        string accountName = Console.ReadLine();
+                        Console.WriteLine("How much money would you like to send to " + accountName + "?");
+                        decimal amountTransfered = Convert.ToDecimal(Console.ReadLine());
+                        using (var dbContext = new BankProjectEntities())
+                        {
+                            var fromUser = dbContext.Users.FirstOrDefault(x => x.UserId == loggedUserId);
+                            var fromAccount = dbContext.Accounts.FirstOrDefault(x => x.AccountId == loggedUserId);
+                            var toUser = dbContext.Users.FirstOrDefault(x => x.Username== accountName);
+                            var accountId = toUser.UserId;
+                            var toAccount = dbContext.Accounts.FirstOrDefault(x => x.AccountId == accountId);
+                            fromAccount.Balance = fromAccount.Balance - amountTransfered;
+                            toAccount.Balance = toAccount.Balance + amountTransfered;
+                            var transactionNumber = new Transaction();
+                            var transaction = new Data.Transaction
+                            {
+
+                                Transaction_Date = DateTime.Now,
+                                Transaction_Amount = amountTransfered,
+                                Transaction_Number = transactionNumber.Transaction_Number + 1,
+                                
+                            };
+                            dbContext.Transactions.Add(transaction);
+                            dbContext.SaveChanges();
+                        }
+                        
+                    }
                         else if (whatUserWants == "7")
                         {
                             Environment.Exit(1);
@@ -266,7 +295,7 @@ namespace BankAccounts
 
                 }
 
-            }
+            
         }
     }
 }
