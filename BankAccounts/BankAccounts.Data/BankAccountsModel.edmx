@@ -29,9 +29,9 @@
           <Key>
             <PropertyRef Name="Transaction Number" />
           </Key>
-          <Property Name="Transaction Number" Type="int" Nullable="false" />
-          <Property Name="Transaction Amount" Type="money" />
-          <Property Name="Transaction Date" Type="datetime" />
+          <Property Name="Transaction Number" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Transaction Amount" Type="money" Nullable="false" />
+          <Property Name="Transaction Date" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -196,8 +196,8 @@
             <PropertyRef Name="Transaction_Number" />
           </Key>
           <Property Name="Transaction_Number" Type="Int32" Nullable="false" />
-          <Property Name="Transaction_Amount" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="Transaction_Date" Type="DateTime" Precision="3" />
+          <Property Name="Transaction_Amount" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="Transaction_Date" Type="DateTime" Precision="3" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>

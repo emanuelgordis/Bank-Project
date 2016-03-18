@@ -12,17 +12,22 @@ namespace BankAccounts
     {
         static void Main(string[] args)
         {
-
-           
-
-
-
             bool passedUserName = false;
             bool passedPassword = false;
             int loggedUserId = 0;
             //making a new account or logging in
             Console.WriteLine("Welcome to Emanuel's bank! \nDo you have an account already? Yes/No");
             string newUserOrNah = Console.ReadLine();
+           if(newUserOrNah.ToLower() != "yes" && newUserOrNah.ToLower() != "no")
+            {
+                while (newUserOrNah.ToLower() != "yes" && newUserOrNah.ToLower() != "no")
+                {
+                    Console.WriteLine("That is not an option, are you a new user?");
+                    newUserOrNah = Console.ReadLine();
+                }
+            }
+            
+
             if (newUserOrNah.ToLower() == "yes")
             {
                 BankProjectEntities accounts = new BankProjectEntities();
@@ -53,6 +58,7 @@ namespace BankAccounts
                         loggedUserId = userNameAndPassword.UserId;
                     }
                 }
+
                 else if (accountQuantity == 0)
                 {
                     Console.WriteLine("There are no registered user! \n To sign up please enter your name");
@@ -105,9 +111,9 @@ namespace BankAccounts
 
 
 
-                  }
-
                 }
+
+             }
 
                 else if (newUserOrNah == "No" || newUserOrNah == "no")
                 {
@@ -136,12 +142,16 @@ namespace BankAccounts
                         //Setting the balance
                         Account account = new Account();
                         Console.WriteLine("How much money would you like to open your account with?");
-                        decimal enteredAccountBalance = Convert.ToDecimal(Console.ReadLine());
+                        string enteredAccountBalance = Console.ReadLine();
+                        decimal enteredAccounrBalanceAsDecimal;
+                    if (decimal.TryParse(enteredAccountBalance, out enteredAccounrBalanceAsDecimal))
+                    {
+                        enteredAccounrBalanceAsDecimal = Convert.ToDecimal(enteredAccountBalance);
                         var account2 = new Data.Account
 
                         {
 
-                            Balance = enteredAccountBalance,
+                            Balance = enteredAccounrBalanceAsDecimal,
 
                             CreatedDate = DateTime.Now,
 
@@ -154,7 +164,7 @@ namespace BankAccounts
                         dbContext.Accounts.Add(account2);
                         dbContext.SaveChanges();
 
-
+                    }
 
                         //logging in
                         
@@ -182,14 +192,6 @@ namespace BankAccounts
                             loggedUserId = userNameAndPassword.UserId;
                         }
                     }
-                }
-
-                else
-                {
-                    if(newUserOrNah.ToLower() != "Yes" || newUserOrNah.ToLower() != "No")
-
-                        Console.WriteLine("That is not a valid answer, are you a new user?");
-                        newUserOrNah = Console.ReadLine();
                 }
 
                 if (passedUserName == true && passedPassword == true)
@@ -220,19 +222,31 @@ namespace BankAccounts
                         {
                             Account account = new Account();
                             Console.WriteLine("How much money would you like to withdraw from your account?");
-                            decimal withDrawAmount = Convert.ToDecimal(Console.ReadLine());
-                            using(var dbContext = new BankProjectEntities())
+                            string withDrawAmount = Console.ReadLine();
+                        decimal withdrawAmountAsDecimal;
+                        if(decimal.TryParse(withDrawAmount, out withdrawAmountAsDecimal))
+                        {
+                            using (var dbContext = new BankProjectEntities())
                             {
                                 int accountId = loggedUserId;
                                 var account2 = dbContext.Accounts.FirstOrDefault(x => x.AccountId == accountId);
-                                if(account2 != null)
+                                if (account2 != null)
                                 {
-                                    Account anotherAccount = new Account();
-                                    decimal newBalance = anotherAccount.Balance - withDrawAmount;
+                                    withdrawAmountAsDecimal = Convert.ToDecimal(withDrawAmount);
+                                    decimal newBalance = account2.Balance - withdrawAmountAsDecimal;
                                     Console.WriteLine("Thank you, your new balance is $" + newBalance);
-                                    anotherAccount.Balance = newBalance;
+                                    account2.Balance = newBalance;
                                 }
+
+                                dbContext.SaveChanges();
                             }
+                        }
+
+                        else
+                        {
+                            Console.WriteLine("That is not a valid amount \nPlease try again");
+                            withDrawAmount = Console.ReadLine();
+                        }
                             
                         }
 
@@ -240,47 +254,122 @@ namespace BankAccounts
                         {
                             Account account = new Account();
                             Console.WriteLine("How much money would you like to deposit in your account?");
-                            decimal depositAmount = Convert.ToDecimal(Console.ReadLine());
-                            using (var dbContext = new BankProjectEntities())
+                            string depositAmount = Console.ReadLine();
+                            decimal depositAmountAsDecimal;
+                            if(decimal.TryParse(depositAmount, out depositAmountAsDecimal))
                             {
-                                int accountId = loggedUserId;
-                                var account2 = dbContext.Accounts.FirstOrDefault(x => x.AccountId == accountId);
+                              using (var dbContext = new BankProjectEntities())
+                              {
+                                var account2 = dbContext.Accounts.FirstOrDefault(x => x.AccountId == loggedUserId);
                                 if (account2 != null)
                                 {
-                                    Account anotherAccount = new Account();
-                                    decimal newBalance = anotherAccount.Balance + depositAmount;
+                                    depositAmountAsDecimal = Convert.ToDecimal(depositAmount);
+                                    decimal newBalance = account2.Balance + depositAmountAsDecimal;
                                     Console.WriteLine("Thank you, your new balance is $" + newBalance);
-                                    anotherAccount.Balance = newBalance;
+                                    account2.Balance = newBalance;
                                 }
-                            }
+                                dbContext.SaveChanges();
+                              }
+                          }
+                          else
+                          {
+                            Console.WriteLine("That is not a valid amount");
+                            depositAmount = Console.ReadLine();
+                          }
                         }
+                        
                         
                         else if(whatUserWants == "4")
                     {
                         Console.WriteLine("Please enter the username to which you'd like to send money to");
                         string accountName = Console.ReadLine();
-                        Console.WriteLine("How much money would you like to send to " + accountName + "?");
-                        decimal amountTransfered = Convert.ToDecimal(Console.ReadLine());
                         using (var dbContext = new BankProjectEntities())
                         {
+                            var toUser = dbContext.Users.FirstOrDefault(x => x.Username == accountName);
+                            while (toUser == null)
+                            {
+                                Console.WriteLine("That is not a registered user, sorry \nPlease try again");
+                                accountName = Console.ReadLine();
+                                toUser = dbContext.Users.FirstOrDefault(x => x.Username == accountName);
+                            }
+
+                            var toAccount = dbContext.Accounts.FirstOrDefault(x => x.AccountId == toUser.UserId);
                             var fromUser = dbContext.Users.FirstOrDefault(x => x.UserId == loggedUserId);
                             var fromAccount = dbContext.Accounts.FirstOrDefault(x => x.AccountId == loggedUserId);
-                            var toUser = dbContext.Users.FirstOrDefault(x => x.Username== accountName);
-                            var accountId = toUser.UserId;
-                            var toAccount = dbContext.Accounts.FirstOrDefault(x => x.AccountId == accountId);
-                            fromAccount.Balance = fromAccount.Balance - amountTransfered;
-                            toAccount.Balance = toAccount.Balance + amountTransfered;
-                            var transactionNumber = new Transaction();
-                            var transaction = new Data.Transaction
-                            {
 
-                                Transaction_Date = DateTime.Now,
-                                Transaction_Amount = amountTransfered,
-                                Transaction_Number = transactionNumber.Transaction_Number + 1,
+                            Console.WriteLine("How much money would you like to send to " + accountName + "?");
+                            string amountTransfered = Console.ReadLine();
+                            decimal amountTransferedAsDecimal;
+
+                            if (decimal.TryParse(amountTransfered, out amountTransferedAsDecimal))
+                            {
+                                amountTransferedAsDecimal = Convert.ToDecimal(amountTransfered);
+                                decimal whatWillRemain = toAccount.Balance - amountTransferedAsDecimal;
+                                if (amountTransferedAsDecimal > 0 && whatWillRemain > 0)
+                                {
+                                    fromAccount.Balance = fromAccount.Balance - amountTransferedAsDecimal;
+                                    toAccount.Balance = toAccount.Balance + amountTransferedAsDecimal;
+                                }
+                                else
+                                {
+                                    while (amountTransferedAsDecimal < 0 || whatWillRemain < 0)
+                                    {
+                                        Console.WriteLine("You either do not have sufficent funds or you have entered a number less than $1 \nPlease try again");
+                                        amountTransferedAsDecimal = Convert.ToDecimal(Console.ReadLine());
+                                    }
+                                    fromAccount.Balance = fromAccount.Balance - amountTransferedAsDecimal;
+                                    toAccount.Balance = toAccount.Balance + amountTransferedAsDecimal;
+
+                                }
+                                var transaction = new Data.Transaction
+                                {
+
+                                    Transaction_Date = DateTime.Now,
+                                    Transaction_Amount = amountTransferedAsDecimal,
+                                };
+                                dbContext.Transactions.Add(transaction);
+                                dbContext.SaveChanges();
+
+                                Console.WriteLine("Thank you, your new balance is $" + fromAccount.Balance);
+                            }
+
+                            else
+                            {
                                 
-                            };
-                            dbContext.Transactions.Add(transaction);
-                            dbContext.SaveChanges();
+                                while(decimal.TryParse(amountTransfered, out amountTransferedAsDecimal) != true)
+                                {
+                                    Console.WriteLine("Sorry that is not a valid amount \nPlease try again");
+                                    amountTransfered = Console.ReadLine();
+                                }
+                                amountTransferedAsDecimal = Convert.ToDecimal(amountTransfered);
+                                decimal whatWillRemain = toAccount.Balance - amountTransferedAsDecimal;
+                                if (amountTransferedAsDecimal > 0 && whatWillRemain > 0)
+                                {
+                                    fromAccount.Balance = fromAccount.Balance - amountTransferedAsDecimal;
+                                    toAccount.Balance = toAccount.Balance + amountTransferedAsDecimal;
+                                }
+                                else
+                                {
+                                    while (amountTransferedAsDecimal < 0 || whatWillRemain < 0)
+                                    {
+                                        Console.WriteLine("You either do not have sufficent funds or you have entered a number less than $1 \nPlease try again");
+                                        amountTransferedAsDecimal = Convert.ToDecimal(Console.ReadLine());
+                                    }
+                                    fromAccount.Balance = fromAccount.Balance - amountTransferedAsDecimal;
+                                    toAccount.Balance = toAccount.Balance + amountTransferedAsDecimal;
+
+                                }
+                                var transaction = new Data.Transaction
+                                {
+
+                                    Transaction_Date = DateTime.Now,
+                                    Transaction_Amount = amountTransferedAsDecimal,
+                                };
+                                dbContext.Transactions.Add(transaction);
+                                dbContext.SaveChanges();
+
+                                Console.WriteLine("Thank you, your new balance is $" + fromAccount.Balance);
+                            }
                         }
                         
                     }
@@ -289,13 +378,12 @@ namespace BankAccounts
                             Environment.Exit(1);
                         }
 
-                        Console.WriteLine("To exit press 7 \nTo check account balance, press 1 \nTo withdraw money press 2 \nTo deposit money press 3");
+                        Console.WriteLine("To exit press 7 \nTo check account balance, press 1 \nTo withdraw money press 2 \nTo deposit money press 3 \nTo transfer money to another account press 4");
                         whatUserWants = Console.ReadLine();
                     }
 
                 }
-
-            
+            }
         }
     }
-}
+

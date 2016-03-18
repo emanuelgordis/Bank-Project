@@ -15,7 +15,7 @@ namespace BankAccounts.Data
     public partial class Transaction
     {
         public int Transaction_Number { get; set; }
-        public Nullable<decimal> Transaction_Amount { get; set; }
-        public Nullable<System.DateTime> Transaction_Date { get; set; }
+        public decimal Transaction_Amount { get; set; }
+        public System.DateTime Transaction_Date { get; set; }
     }
 }
